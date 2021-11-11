@@ -6,7 +6,7 @@ Deploy https certificates non-interactively to CDN services.
 
 * `CERT_PATH` - Certificate file path, should contain certificate and all intermediate certificates. `LEGO_CERT_PATH` is also supported.
 * `CERT_KEY_PATH` - Certificate key file path, should contain private key for certificate. `LEGO_CERT_KEY_PATH` is also supported.
-* `CERT_DEPLOYER` - Deployer vendor. Default: aliyun
+* `CERT_DEPLOYER` - Deployer vendor. Default: `aliyun`
 
 ### Aliyun deployer
 
