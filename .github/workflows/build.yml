@@ -8,6 +8,9 @@ jobs:
       matrix:
         os: ["linux", "darwin", "windows"]
         arch: ["386", "amd64"]
+        exclude:
+          - os: darwin
+            arch: "386"
     steps:
       - name: Set up Go 1.17
         uses: actions/setup-go@v1
