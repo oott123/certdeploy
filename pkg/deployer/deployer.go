@@ -10,6 +10,8 @@ type Deployer interface {
 func Create(name string) (Deployer, error) {
 	if name == "aliyun" {
 		return CreateAliyunDeployer()
+	} else if name == "upyun" {
+		return CreateUpyunDeployer()
 	} else {
 		return nil, fmt.Errorf("create deployer failed: no deployer named %s", name)
 	}
