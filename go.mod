@@ -1,17 +1,17 @@
-module cert-deploy
+module github.com/oott123/certdeploy
 
 go 1.17
 
 require (
 	github.com/alibabacloud-go/cdn-20180510 v1.0.2
 	github.com/alibabacloud-go/darabonba-openapi v0.1.7
+	github.com/alibabacloud-go/tea v1.1.15
 )
 
 require (
 	github.com/alibabacloud-go/debug v0.0.0-20190504072949-9472017b5c68 // indirect
 	github.com/alibabacloud-go/endpoint-util v1.1.0 // indirect
 	github.com/alibabacloud-go/openapi-util v0.0.8 // indirect
-	github.com/alibabacloud-go/tea v1.1.15 // indirect
 	github.com/alibabacloud-go/tea-utils v1.3.9 // indirect
 	github.com/aliyun/credentials-go v1.1.2 // indirect
 	github.com/json-iterator/go v1.1.10 // indirect

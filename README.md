@@ -1,4 +1,4 @@
-# cert-deploy
+# certdeploy
 
 Deploy https certificates non-interactively to CDN services.
 

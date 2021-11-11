@@ -1,9 +1,9 @@
 package main
 
 import (
-	"cert-deploy/pkg/certparser"
-	"cert-deploy/pkg/deployer"
 	"fmt"
+	"github.com/oott123/certdeploy/pkg/certparser"
+	"github.com/oott123/certdeploy/pkg/deployer"
 	"io/ioutil"
 	"log"
 	"os"
