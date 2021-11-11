@@ -13,8 +13,8 @@ import (
 type UpyunDeployer struct {
 	username string
 	password string
-	jar *cookiejar.Jar
-	client *resty.Client
+	jar      *cookiejar.Jar
+	client   *resty.Client
 }
 
 func (u *UpyunDeployer) Name() string {
@@ -96,12 +96,28 @@ func (u *UpyunDeployer) DomainsByCertificate(certId string) ([]string, error) {
 func (u *UpyunDeployer) SetDomainCertificate(certId string, domain string) error {
 	resp, err := u.client.R().SetBody(map[string]interface{}{
 		"certificate_id": certId,
-		"domain": domain,
-		"https": true,
+		"domain":         domain,
+		"https":          true,
 	}).Post("https://console.upyun.com/api/https/certificate/manager/")
 
 	if err = checkApiResult(resp, err); err != nil {
+		if gjson.Get(resp.String(), "data.error_code").String() == "21713" {
+			return u.MigrateDomainCertificate(certId, domain)
+		}
 		return fmt.Errorf("failed to set https: %w", err)
+	}
+
+	return nil
+}
+
+func (u *UpyunDeployer) MigrateDomainCertificate(certId, domain string) error {
+	resp, err := u.client.R().SetBody(map[string]string{
+		"crt_id":      certId,
+		"domain_name": domain,
+	}).Post("https://console.upyun.com/api/https/migrate/domain")
+
+	if err = checkApiResult(resp, err); err != nil {
+		return fmt.Errorf("failed to migrate domain: %w", err)
 	}
 
 	return nil
@@ -124,7 +140,6 @@ func checkApiResult(resp *resty.Response, err error) error {
 	return nil
 }
 
-
 var _ Deployer = (*UpyunDeployer)(nil)
 
 func CreateUpyunDeployer() (*UpyunDeployer, error) {
@@ -141,6 +156,6 @@ func CreateUpyunDeployer() (*UpyunDeployer, error) {
 		username: os.Getenv("UPYUN_USERNAME"),
 		password: os.Getenv("UPYUN_PASSWORD"),
 		jar:      jar,
-		client: client,
+		client:   client,
 	}, nil
 }
