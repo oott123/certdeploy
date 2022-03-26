@@ -1,53 +1,38 @@
-name: Go
-on: [push]
+name: goreleaser
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: write
+
 jobs:
-  build:
-    name: Build
+  goreleaser:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: ["linux", "darwin", "windows"]
-        arch: ["386", "amd64"]
-        exclude:
-          - os: darwin
-            arch: "386"
     steps:
-      - name: Set up Go 1.17
-        uses: actions/setup-go@v1
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      -
+        name: Fetch all tags
+        run: git fetch --force --tags
+      -
+        name: Set up Go
+        uses: actions/setup-go@v2
         with:
           go-version: 1.17
-        id: go
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@v1
-      - name: Get dependencies
-        run: |
-          go get -v -t -d ./...
-          if [ -f Gopkg.toml ]; then
-              curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-              dep ensure
-          fi
-      - name: Build
-        run: go build -v -o build/certdeploy-${{ matrix.os }}_${{ matrix.arch }} github.com/oott123/certdeploy/cmd/certdeploy
-        env:
-          GOOS: ${{ matrix.os }}
-          GOARCH: ${{ matrix.arch }}
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v1
+      -
+        name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v2
         with:
-          name: binaries
-          path: build
-  release:
-    name: Release
-    runs-on: ubuntu-latest
-    needs: [build]
-    if: startsWith(github.ref, 'refs/tags/')
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: binaries
-      - name: Release
-        uses: fnkr/github-action-ghr@v1
+          # either 'goreleaser' (default) or 'goreleaser-pro'
+          distribution: goreleaser
+          version: latest
+          args: release --rm-dist
         env:
-          GHR_PATH: binaries/
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Your GoReleaser Pro key, if you are using the 'goreleaser-pro' distribution
+          # GORELEASER_KEY: ${{ secrets.GORELEASER_KEY }}
