@@ -2,8 +2,8 @@ package deployer
 
 import (
 	"fmt"
-	cdn  "github.com/alibabacloud-go/cdn-20180510/client"
-	openapi  "github.com/alibabacloud-go/darabonba-openapi/client"
+	cdn "github.com/alibabacloud-go/cdn-20180510/client"
+	openapi "github.com/alibabacloud-go/darabonba-openapi/client"
 	"github.com/alibabacloud-go/tea/tea"
 	"log"
 	"os"
@@ -11,8 +11,8 @@ import (
 )
 
 type AliyunDeployer struct {
-	client *cdn.Client
-	updateOnly bool
+	client        *cdn.Client
+	updateOnly    bool
 	resourceGroup string
 }
 
@@ -38,10 +38,10 @@ func (d *AliyunDeployer) Deploy(domains []string, cert, key string) error {
 		for true {
 			log.Printf("domain %s %s, page %d ...", normalizedDomain, matchType, pageNumber)
 			request := cdn.DescribeUserDomainsRequest{
-				DomainName: tea.String(normalizedDomain),
+				DomainName:       tea.String(normalizedDomain),
 				DomainSearchType: tea.String(matchType),
 				CheckDomainShow:  tea.Bool(false),
-				PageNumber: tea.Int32(pageNumber),
+				PageNumber:       tea.Int32(pageNumber),
 			}
 			if d.resourceGroup != "" {
 				request.ResourceGroupId = tea.String(d.resourceGroup)
@@ -51,7 +51,7 @@ func (d *AliyunDeployer) Deploy(domains []string, cert, key string) error {
 				return fmt.Errorf("failed to describe user domains with suffix %s: %w", normalizedDomain, err)
 			}
 			for _, cdnDomain := range cdnDomains.Body.Domains.PageData {
-				if cdnDomain.DomainName != nil {
+				if cdnDomain.DomainName != nil && d.checkDomainStatus(cdnDomain.DomainStatus) {
 					if d.updateOnly {
 						if *cdnDomain.SslProtocol == "on" {
 							domainsToDeploy[*cdnDomain.DomainName] = true
@@ -94,15 +94,19 @@ func (d *AliyunDeployer) Deploy(domains []string, cert, key string) error {
 	return nil
 }
 
+func (d *AliyunDeployer) checkDomainStatus(status *string) bool {
+	return *status == "online" || *status == "configuring"
+}
+
 func (d *AliyunDeployer) deployCert(cdnDomains []string, name, cert, key string) error {
 	log.Printf("deploying cert for domains: %s", strings.Join(cdnDomains, ", "))
 	request := cdn.BatchSetCdnDomainServerCertificateRequest{
-		DomainName:    tea.String(strings.Join(cdnDomains, ",")),
-		CertName:      tea.String(name),
-		CertType:      tea.String("upload"),
-		SSLPub:        tea.String(cert),
-		SSLPri:        tea.String(key),
-		ForceSet:      tea.String("1"),
+		DomainName:  tea.String(strings.Join(cdnDomains, ",")),
+		CertName:    tea.String(name),
+		CertType:    tea.String("upload"),
+		SSLPub:      tea.String(cert),
+		SSLPri:      tea.String(key),
+		ForceSet:    tea.String("1"),
 		SSLProtocol: tea.String("on"),
 	}
 
@@ -125,18 +129,18 @@ var _ Deployer = (*AliyunDeployer)(nil)
 
 func CreateAliyunDeployer() (*AliyunDeployer, error) {
 	config := openapi.Config{
-		AccessKeyId: tea.String(os.Getenv("ALIYUN_ACCESS_KEY_ID")),
+		AccessKeyId:     tea.String(os.Getenv("ALIYUN_ACCESS_KEY_ID")),
 		AccessKeySecret: tea.String(os.Getenv("ALIYUN_ACCESS_KEY_SECRET")),
 	}
-	
+
 	client, err := cdn.NewClient(&config)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create aliyun sdk instance: %w", err)
 	}
 
 	deployer := AliyunDeployer{
-		client: client,
-		updateOnly: os.Getenv("ALIYUN_CERT_UPDATE_ONLY") == "true",
+		client:        client,
+		updateOnly:    os.Getenv("ALIYUN_CERT_UPDATE_ONLY") == "true",
 		resourceGroup: os.Getenv("ALIYUN_CERT_RESOURCE_GROUP"),
 	}
 
