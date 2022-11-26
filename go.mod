@@ -7,6 +7,8 @@ require (
 	github.com/alibabacloud-go/darabonba-openapi v0.1.7
 	github.com/alibabacloud-go/tea v1.1.15
 	github.com/go-resty/resty/v2 v2.7.0
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.373
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.373
 	github.com/tidwall/gjson v1.11.0
 	golang.org/x/net v0.0.0-20211029224645-99673261e6eb
 )

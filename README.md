@@ -21,3 +21,10 @@ Deploy https certificates non-interactively to CDN services.
 * `CERT_DEPLOYER` - `upyun`
 * `UPYUN_USERNAME` - Upyun login username
 * `UPYUN_PASSWORD` - Upyun login password. 2FA is not supported now.
+
+### tencentcloud deployer
+
+* `CERT_DEPLOYER` - `tencentcloud`
+* `TENCENTCLOUD_SECRET_ID` - Secret ID for tencent cloud.
+* `TENCENTCLOUD_SECRET_KEY` - Secret Key for tencent cloud.
+* `TENCENTCLOUD_CERT_UPDATE_ONLY` - If `true`, only certs for CDN domains with SSL enabled will be updated. Default: `false`
