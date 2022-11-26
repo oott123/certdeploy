@@ -28,3 +28,8 @@ Deploy https certificates non-interactively to CDN services.
 * `TENCENTCLOUD_SECRET_ID` - Secret ID for tencent cloud.
 * `TENCENTCLOUD_SECRET_KEY` - Secret Key for tencent cloud.
 * `TENCENTCLOUD_CERT_UPDATE_ONLY` - If `true`, only certs for CDN domains with SSL enabled will be updated. Default: `false`
+
+### udomain deployer
+
+* `CERT_DEPLOYER` - `udomain`
+* `UDOMAIN_API_KEY` - API Key created from [udomain CDN dashboard](https://cdn.8338.hk/key)
