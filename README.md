@@ -2,6 +2,21 @@
 
 Deploy https certificates non-interactively to CDN services.
 
+## Supported deployers
+
+### CDN Providers
+
+* Aliyun
+* Upyun
+* Tencent Cloud
+
+Deploys to all CDN domains which matched by given certificate.
+
+### Azure KeyVault
+
+Updates all certificates in specified KeyVault, if only all domains in existing 
+certificate are covered by given certificate.
+
 ## Environment Variables
 
 * `CERT_PATH` - Certificate file path, should contain certificate and all intermediate certificates. `LEGO_CERT_PATH` is also supported.
@@ -33,3 +48,11 @@ Deploy https certificates non-interactively to CDN services.
 
 * `CERT_DEPLOYER` - `udomain`
 * `UDOMAIN_API_KEY` - API Key created from [udomain CDN dashboard](https://cdn.8338.hk/key)
+
+### azure deployer
+
+* `CERT_DEPLOYER` - `azure`
+* `AZURE_KEY_VAULT_URI` - Azure KeyVault Uri, likely `https://SOMETHING.vault.azure.net/`
+* Follow [Azure authentication with the Azure SDK for Go](https://learn.microsoft.com/en-us/azure/developer/go/azure-sdk-authentication) 
+  and [Assign a Key Vault access policy](https://learn.microsoft.com/en-us/azure/key-vault/general/assign-access-policy)
+  to configure credentials
