@@ -15,7 +15,7 @@ Deploys to all CDN domains which matched by given certificate.
 
 ### Azure KeyVault
 
-Updates all certificates in specified KeyVault, if only all domains in existing 
+Updates all certificates in specified KeyVault, if and only if all domains in existing 
 certificate are covered by given certificate.
 
 ## Environment Variables
