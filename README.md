@@ -38,19 +38,19 @@ certificate are covered by given certificate.
 * `UPYUN_USERNAME` - Upyun login username
 * `UPYUN_PASSWORD` - Upyun login password. 2FA is not supported now.
 
-### tencentcloud deployer
+### Tencent Cloud deployer
 
 * `CERT_DEPLOYER` - `tencentcloud`
 * `TENCENTCLOUD_SECRET_ID` - Secret ID for tencent cloud.
 * `TENCENTCLOUD_SECRET_KEY` - Secret Key for tencent cloud.
 * `TENCENTCLOUD_CERT_UPDATE_ONLY` - If `true`, only certs for CDN domains with SSL enabled will be updated. Default: `false`
 
-### udomain deployer
+### UDomain deployer
 
 * `CERT_DEPLOYER` - `udomain`
 * `UDOMAIN_API_KEY` - API Key created from [udomain CDN dashboard](https://cdn.8338.hk/key)
 
-### azure deployer
+### Azure KeyVault deployer
 
 * `CERT_DEPLOYER` - `azure`
 * `AZURE_KEY_VAULT_URI` - Azure KeyVault Uri, likely `https://SOMETHING.vault.azure.net/`
