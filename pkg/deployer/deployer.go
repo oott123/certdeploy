@@ -16,6 +16,8 @@ func Create(name string) (Deployer, error) {
 		return CreateTencentCloudDeployer()
 	} else if name == "udomain" {
 		return CreateUDomainDeployer()
+	} else if name == "azure" {
+		return CreateAzureDeployer()
 	} else {
 		return nil, fmt.Errorf("create deployer failed: no deployer named %s", name)
 	}
