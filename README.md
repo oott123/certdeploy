@@ -1,6 +1,7 @@
 # certdeploy
 
-Deploy https certificates non-interactively to CDN services.
+All-in-one BYOC solution for CDN services, help you to deploy 
+HTTPS(SSL) certificates automatically to CDN services.
 
 ## Supported deployers
 
