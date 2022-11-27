@@ -1,7 +1,7 @@
 # certdeploy
 
-All-in-one BYOC solution for CDN services, help you to deploy 
-HTTPS(SSL) certificates automatically to CDN services.
+All-in-one BYOC (Bring Your Own Certificates) solution for CDN services, help you to deploy 
+SSL (HTTPS) certificates automatically to CDN services.
 
 ## Supported deployers
 
