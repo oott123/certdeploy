@@ -99,22 +99,41 @@ func (d *AliyunDeployer) checkDomainStatus(status *string) bool {
 }
 
 func (d *AliyunDeployer) deployCert(cdnDomains []string, name, cert, key string) error {
-	log.Printf("deploying cert for domains: %s", strings.Join(cdnDomains, ", "))
-	request := cdn.BatchSetCdnDomainServerCertificateRequest{
-		DomainName:  tea.String(strings.Join(cdnDomains, ",")),
-		CertName:    tea.String(name),
-		CertType:    tea.String("upload"),
-		SSLPub:      tea.String(cert),
-		SSLPri:      tea.String(key),
-		ForceSet:    tea.String("1"),
-		SSLProtocol: tea.String("on"),
+	start := 0
+	for start < len(cdnDomains) {
+		end := min(start+10, len(cdnDomains))
+		chunkedDomains := strings.Join(cdnDomains[start:end], ",")
+		log.Printf(
+			"deploying cert for domains (%d~%d): %s",
+			start+1, end,
+			strings.ReplaceAll(chunkedDomains, ",", ", "),
+		)
+		request := cdn.BatchSetCdnDomainServerCertificateRequest{
+			DomainName:  tea.String(chunkedDomains),
+			CertName:    tea.String(name),
+			CertType:    tea.String("upload"),
+			SSLPub:      tea.String(cert),
+			SSLPri:      tea.String(key),
+			ForceSet:    tea.String("1"),
+			SSLProtocol: tea.String("on"),
+		}
+
+		_, err := d.client.BatchSetCdnDomainServerCertificate(&request)
+		if err != nil {
+			return fmt.Errorf("failed to call batch set cert api: %w", err)
+		}
+
+		start += end
 	}
 
-	_, err := d.client.BatchSetCdnDomainServerCertificate(&request)
-	if err != nil {
-		return fmt.Errorf("failed to call batch set cert api: %w", err)
-	}
 	return nil
+}
+
+func min(x, y int) int {
+	if x < y {
+		return x
+	}
+	return y
 }
 
 func normalizeDomain(domain string) string {
