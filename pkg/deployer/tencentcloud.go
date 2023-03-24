@@ -89,12 +89,13 @@ func (d *TencentCloudDeployer) deployCert(cdnDomain *cdn.DetailDomain, cert stri
 			Switch: common.StringPtr("on"),
 		}
 	}
-	if cdnDomain.Https.CertInfo == nil {
-		cdnDomain.Https.CertInfo = &cdn.ServerCert{}
-	}
+
 	cdnDomain.Https.Switch = common.StringPtr("on")
+
+	cdnDomain.Https.CertInfo = &cdn.ServerCert{}
 	cdnDomain.Https.CertInfo.Certificate = common.StringPtr(cert)
 	cdnDomain.Https.CertInfo.PrivateKey = common.StringPtr(key)
+	cdnDomain.Https.CertInfo.Message = common.StringPtr("certdeploy")
 
 	request := cdn.NewUpdateDomainConfigRequest()
 	request.Domain = cdnDomain.Domain
