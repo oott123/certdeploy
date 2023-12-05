@@ -75,7 +75,7 @@ func (d *AzureDeployer) importCertificate(name, cert, key string) error {
 		Tags:     nil,
 	}, nil)
 	if err != nil {
-		return fmt.Errorf("failed to request import certificate to %s: %w", name, err)
+		return fmt.Errorf("failed to volcRequest import certificate to %s: %w", name, err)
 	}
 	return nil
 }

@@ -26,7 +26,7 @@ func (d *TencentCloudDeployer) Deploy(domains []string, cert, key string) error 
 
 	log.Println("getting tencent cloud CDN domains matching given certificates")
 	for _, domain := range domains {
-		normalizedDomain := normalizeDomain(domain)
+		normalizedDomain := normalizeWildcardDomain(domain)
 		fuzzy := false
 		if normalizedDomain[0] == '.' {
 			fuzzy = true

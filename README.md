@@ -7,9 +7,11 @@ SSL (HTTPS) certificates automatically to CDN services.
 
 ### CDN Providers
 
-* Aliyun
-* Upyun
-* Tencent Cloud
+* Aliyun (CDN)
+* Upyun (CDN)
+* Tencent Cloud (CDN)
+* UDomain (CDN)
+* Volc Engine (CDN and DCDN)
 
 Deploys to all CDN domains which matched by given certificate.
 
@@ -49,6 +51,34 @@ certificate are covered by given certificate.
 
 * `CERT_DEPLOYER` - `udomain`
 * `UDOMAIN_API_KEY` - API Key created from [udomain CDN dashboard](https://cdn.8338.hk/key)
+
+### Volc Engine deployer
+
+<details>
+<summary>Required ACL policy</summary>
+
+```json
+{
+  "Statement": [{
+      "Effect": "Allow",
+      "Action": [
+        "dcdn:ListCertBind",
+        "dcdn:CreateCertBind",
+        "CDN:AddCdnCertificate",
+        "CDN:DescribeCertConfig",
+        "CDN:BatchDeployCert"
+      ],
+      "Resource": ["*"]
+  }]
+}
+```
+
+</details>
+
+* `CERT_DEPLOYER` - `volc`
+* `VOLC_ACCESS_KEY_ID` - Access Key ID.
+* `VOLC_SECRET_ACCESS_KEY` - Secret Access Key.
+* `VOLC_DEPLOY_TARGETS` - `cdn`, `dcdn`, `cdn,dcdn` (default)
 
 ### Azure KeyVault deployer
 

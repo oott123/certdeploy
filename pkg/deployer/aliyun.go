@@ -29,7 +29,7 @@ func (d *AliyunDeployer) Deploy(domains []string, cert, key string) error {
 	log.Println("getting aliyun CDN domains matching given certificates")
 	domainsToDeploy := make(map[string]bool)
 	for _, domain := range domains {
-		normalizedDomain := normalizeDomain(domain)
+		normalizedDomain := normalizeWildcardDomain(domain)
 		matchType := "full_match"
 		if normalizedDomain[0] == '.' {
 			matchType = "suf_match"
@@ -77,7 +77,7 @@ func (d *AliyunDeployer) Deploy(domains []string, cert, key string) error {
 		i++
 		domainsChunk = append(domainsChunk, domain)
 		if i >= 50 {
-			err := d.deployCert(domainsChunk, normalizeDomain(domains[0]), cert, key)
+			err := d.deployCert(domainsChunk, normalizeWildcardDomain(domains[0]), cert, key)
 			if err != nil {
 				return fmt.Errorf("failed to deploy cert: %w", err)
 			}
@@ -86,7 +86,7 @@ func (d *AliyunDeployer) Deploy(domains []string, cert, key string) error {
 		}
 	}
 	if len(domainsChunk) > 0 {
-		err := d.deployCert(domainsChunk, normalizeDomain(domains[0]), cert, key)
+		err := d.deployCert(domainsChunk, normalizeWildcardDomain(domains[0]), cert, key)
 		if err != nil {
 			return fmt.Errorf("failed to deploy cert: %w", err)
 		}
@@ -136,11 +136,11 @@ func min(x, y int) int {
 	return y
 }
 
-func normalizeDomain(domain string) string {
+func normalizeWildcardDomain(domain string) string {
 	if strings.Index(domain, "*") == 0 {
-		return domain[1:]
+		return strings.ToLower(domain[1:])
 	} else {
-		return domain
+		return strings.ToLower(domain)
 	}
 }
 

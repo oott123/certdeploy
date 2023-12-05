@@ -80,10 +80,10 @@ func (d *UDomainDeployer) Deploy(domains []string, cert, key string) error {
 	}
 	_, err := c.R().SetResult(&response).SetError(&response).Get("/c/v1/subdomain")
 	if err != nil {
-		return fmt.Errorf("failed to request domain: %w", err)
+		return fmt.Errorf("failed to volcRequest domain: %w", err)
 	}
 	if response.Code != "0" {
-		return fmt.Errorf("failed to get domain %s(%s): %w", response.Code, response.Message)
+		return fmt.Errorf("failed to get domain %s(%s)", response.Code, response.Message)
 	}
 
 	subdomainIds := make([]int, 0)
@@ -114,10 +114,10 @@ func (d *UDomainDeployer) Deploy(domains []string, cert, key string) error {
 	}
 	_, err = c.R().SetResult(&certResult).SetError(&certResult).SetBody(&certRequest).Post("/c/v1/certificate")
 	if err != nil {
-		return fmt.Errorf("failed to upload certificate request: %w", err)
+		return fmt.Errorf("failed to upload certificate volcRequest: %w", err)
 	}
 	if certResult.Code != "0" {
-		return fmt.Errorf("failed to upload certificate %s(%s): %w", certResult.Code, certResult.Message)
+		return fmt.Errorf("failed to upload certificate %s(%s)", certResult.Code, certResult.Message)
 	}
 	certId := certResult.Payload.CertificateID
 	log.Printf("successfully uploaded certificate #%d", certId)
@@ -136,7 +136,7 @@ func (d *UDomainDeployer) Deploy(domains []string, cert, key string) error {
 		}
 		r, err := c.R().SetBody(&request).SetError(&result).Put("/c/v1/configuration")
 		if err != nil {
-			return fmt.Errorf("failed to update domain request: %w", err)
+			return fmt.Errorf("failed to update domain volcRequest: %w", err)
 		}
 		if r.StatusCode() > 299 {
 			return fmt.Errorf("failed to update domain: %s %s", result.Code, result.Message)

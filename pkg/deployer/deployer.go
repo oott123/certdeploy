@@ -18,6 +18,8 @@ func Create(name string) (Deployer, error) {
 		return CreateUDomainDeployer()
 	} else if name == "azure" {
 		return CreateAzureDeployer()
+	} else if name == "volc" {
+		return CreateVolcDeployer()
 	} else {
 		return nil, fmt.Errorf("create deployer failed: no deployer named %s", name)
 	}

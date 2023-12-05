@@ -125,10 +125,10 @@ func (u *UpyunDeployer) MigrateDomainCertificate(certId, domain string) error {
 
 func checkApiResult(resp *resty.Response, err error) error {
 	if err != nil {
-		return fmt.Errorf("request failed: %w", err)
+		return fmt.Errorf("volcRequest failed: %w", err)
 	}
 	if resp == nil {
-		return fmt.Errorf("request failed: response is nil")
+		return fmt.Errorf("volcRequest failed: response is nil")
 	}
 	json := resp.String()
 	if gjson.Get(json, "data.error_code").Exists() {
