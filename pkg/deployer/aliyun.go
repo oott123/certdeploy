@@ -2,12 +2,13 @@ package deployer
 
 import (
 	"fmt"
-	cdn "github.com/alibabacloud-go/cdn-20180510/client"
-	openapi "github.com/alibabacloud-go/darabonba-openapi/client"
-	"github.com/alibabacloud-go/tea/tea"
 	"log"
 	"os"
 	"strings"
+
+	cdn "github.com/alibabacloud-go/cdn-20180510/v5/client"
+	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
+	"github.com/alibabacloud-go/tea/tea"
 )
 
 type AliyunDeployer struct {
@@ -99,31 +100,19 @@ func (d *AliyunDeployer) checkDomainStatus(status *string) bool {
 }
 
 func (d *AliyunDeployer) deployCert(cdnDomains []string, name, cert, key string) error {
-	start := 0
-	for start < len(cdnDomains) {
-		end := min(start+10, len(cdnDomains))
-		chunkedDomains := strings.Join(cdnDomains[start:end], ",")
-		log.Printf(
-			"deploying cert for domains (%d~%d): %s",
-			start+1, end,
-			strings.ReplaceAll(chunkedDomains, ",", ", "),
-		)
-		request := cdn.BatchSetCdnDomainServerCertificateRequest{
-			DomainName:  tea.String(chunkedDomains),
-			CertName:    tea.String(name),
+	for i, domain := range cdnDomains {
+		log.Printf("deploying cert for domain %s (%d of %d)", domain, i+1, len(cdnDomains))
+		request := cdn.SetCdnDomainSSLCertificateRequest{
+			DomainName:  tea.String(domain),
 			CertType:    tea.String("upload"),
 			SSLPub:      tea.String(cert),
 			SSLPri:      tea.String(key),
-			ForceSet:    tea.String("1"),
 			SSLProtocol: tea.String("on"),
 		}
-
-		_, err := d.client.BatchSetCdnDomainServerCertificate(&request)
+		_, err := d.client.SetCdnDomainSSLCertificate(&request)
 		if err != nil {
-			return fmt.Errorf("failed to call batch set cert api: %w", err)
+			return fmt.Errorf("failed to call set cert api: %w", err)
 		}
-
-		start += end
 	}
 
 	return nil
